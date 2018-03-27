@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="6EE0B903-C622-4B30-AFE2-6101402E4231"
+         Name="Aaron Demo 1.0"
+         Language="1033"
+         Version="1.0.0.0"
+         Manufacturer="Aaron Inc"
+         UpgradeCode="6D059857-3F23-46AF-85B3-697370C4F611">
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Feature Id='Complete' Title='Aaron Demo 1.0' Description='The complete package.'
+      Display='expand' Level='1' ConfigurableDirectory='INSTALLFOLDER'>
+      
+      <Feature Id="ImgFeature" Title="Goat Image" Level="1">
+        <ComponentGroupRef Id="ImgComponent" />
+      </Feature>
+
+      <Feature Id="BookFeature" Title="War and Peace" Level="3">
+        <ComponentGroupRef Id="BookComponent" />
+      </Feature>
+    </Feature>
+
+    <WixVariable Id="WixUILicenseRtf" Value="extras/License.rtf" />
+
+    <UIRef Id="WixUI_FeatureTree" />
+    <UIRef Id="WixUI_ErrorProgressText" />
+  </Product>
+
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLFOLDER" Name="AaronDemo" />
+      </Directory>
+    </Directory>
+  </Fragment>
+
+  <!-- Picture of a goat
+  via https://www.gettyimages.ca/detail/photo/goat-royalty-free-image/184644491 -->
+  <Fragment>
+    <ComponentGroup Id="ImgComponent" Directory="INSTALLFOLDER">
+      <Component Id="Goat" Guid="3FD30EF9-B248-43AB-8955-EF2A5D2A3F38">
+        <File Id='GoatImg' Name='goat.jpg' DiskId='1' Source='goat.jpg' KeyPath='yes' />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+
+  <!-- Tolstoy's War and Peace
+  via http://www.gutenberg.org/ebooks/2600 -->
+  <Fragment>
+    <ComponentGroup Id="BookComponent" Directory="INSTALLFOLDER">
+      <Component Id="WarPeace" Guid="1DD35771-B250-4957-B49E-78ABE8F387FD">
+        <File Id='WarPeaceBook' Name='war_and_peace_tolstoy.txt' DiskId='1' Source='war_and_peace_tolstoy.txt' KeyPath='yes' />
+      </Component>
+    </ComponentGroup>
+  </Fragment> 
+</Wix>
