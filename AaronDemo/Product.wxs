@@ -4,21 +4,30 @@
          Name="Aaron Demo 1.0"
          Language="1033"
          Version="1.0.0.0"
-         Manufacturer="Aaron Inc"
+         Manufacturer="Aaron"
          UpgradeCode="6D059857-3F23-46AF-85B3-697370C4F611">
     <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     <MediaTemplate EmbedCab="yes" />
 
-    <Feature Id='Complete' Title='Aaron Demo 1.0' Description='The complete package.'
+    <Feature Id="ProgramMenu" Title="Program Menu" Level="1" Description='Create a folder group in the start menu.'>
+      <ComponentRef Id="ProgramMenuComponent" />
+    </Feature>
+
+    <Feature Id="DesktopShortcut" Title="Desktop Shortcut" Level="1" Description='Place a shortcut on the desktop.'>
+      <ComponentRef Id="DesktopShortcutComponent" />
+    </Feature>
+
+    <!-- Core "Application" components -->
+    <Feature Id='Complete' Title='Aaron Demo 1.0' Absent="disallow" Description='Install all components.'
       Display='expand' Level='1' ConfigurableDirectory='INSTALLFOLDER'>
       
-      <Feature Id="ImgFeature" Title="Goat Image" Level="1">
+      <Feature Id="ImgFeature" Title="Goat Image" Description='a jpg of a goat' Level="1" Absent="disallow">
         <ComponentGroupRef Id="ImgComponent" />
       </Feature>
 
-      <Feature Id="BookFeature" Title="War and Peace" Level="3">
+      <Feature Id="BookFeature" Title="War and Peace" Description='Tolstoys famous novel' Level="3">
         <ComponentGroupRef Id="BookComponent" />
       </Feature>
     </Feature>
@@ -29,19 +38,53 @@
     <UIRef Id="WixUI_ErrorProgressText" />
   </Product>
 
+  <!-- Directory structure -->
   <Fragment>
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder">
         <Directory Id="INSTALLFOLDER" Name="AaronDemo" />
       </Directory>
+
+      <Directory Id="ProgramMenuFolder" Name="Programs">
+        <Directory Id="ProgramMenuDir" Name="Aaron Demo" />
+      </Directory>
+      
+      <Directory Id="DesktopFolder" Name="Desktop" />
     </Directory>
+  </Fragment>
+
+  <!-- Start Menu shortcut -->
+  <Fragment>
+    <Component Id="ProgramMenuComponent" Guid="*" Directory="ProgramMenuDir">
+      <Shortcut Id="ProgramMenuShortcut"
+                Name="Aaron Demo"
+                Description="Opens an image of a goat."
+                Directory="ProgramMenuDir"
+                Target="[INSTALLFOLDER]goat.jpg"
+                WorkingDirectory="INSTALLFOLDER"/>
+      <RemoveFolder Id='ProgramMenuComponent' On='uninstall' />
+      <RegistryValue Root='HKCU' Key='Software\[Manufacturer]\[ProductName]' Type='string' Value='' KeyPath='yes' />
+    </Component>
+  </Fragment>
+  
+  <!-- Desktop shortcut -->
+  <Fragment>
+    <Component Id="DesktopShortcutComponent" Guid="*" Directory="DesktopFolder" >
+      <Shortcut Id="DesktopShortcut"
+                Name="Aaron Demo"
+                Description="Opens an image of a goat."
+                Directory="DesktopFolder"
+                Target="[INSTALLFOLDER]goat.jpg"
+                WorkingDirectory="INSTALLFOLDER"/>
+      <RegistryValue Root="HKCU" Key="Software\My Company\Sample Application" Name="installed" Type="integer" Value="1" KeyPath="yes" />
+    </Component>
   </Fragment>
 
   <!-- Picture of a goat
   via https://www.gettyimages.ca/detail/photo/goat-royalty-free-image/184644491 -->
   <Fragment>
     <ComponentGroup Id="ImgComponent" Directory="INSTALLFOLDER">
-      <Component Id="Goat" Guid="3FD30EF9-B248-43AB-8955-EF2A5D2A3F38">
+      <Component Id="Goat" Guid="*">
         <File Id='GoatImg' Name='goat.jpg' DiskId='1' Source='goat.jpg' KeyPath='yes' />
       </Component>
     </ComponentGroup>
@@ -51,7 +94,7 @@
   via http://www.gutenberg.org/ebooks/2600 -->
   <Fragment>
     <ComponentGroup Id="BookComponent" Directory="INSTALLFOLDER">
-      <Component Id="WarPeace" Guid="1DD35771-B250-4957-B49E-78ABE8F387FD">
+      <Component Id="WarPeace" Guid="*">
         <File Id='WarPeaceBook' Name='war_and_peace_tolstoy.txt' DiskId='1' Source='war_and_peace_tolstoy.txt' KeyPath='yes' />
       </Component>
     </ComponentGroup>
