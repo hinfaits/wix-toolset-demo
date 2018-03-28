@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="6EE0B903-C622-4B30-AFE2-6101402E4231"
+  <Product Id="{PUT-GUID-HERE}"
          Name="Aaron Demo 1.0"
          Language="1033"
          Version="1.0.0.0"
          Manufacturer="Aaron"
-         UpgradeCode="6D059857-3F23-46AF-85B3-697370C4F611">
+         UpgradeCode="{PUT-GUID-HERE}">
     <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
